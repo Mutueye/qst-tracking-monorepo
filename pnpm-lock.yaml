@@ -102,9 +102,6 @@ importers:
       sass:
         specifier: ^1.66.1
         version: 1.66.1
-      simple-git-hooks:
-        specifier: ^2.9.0
-        version: 2.9.0
       stylelint:
         specifier: ^15.10.3
         version: 15.10.3
@@ -4203,12 +4200,6 @@ packages:
 
   /simple-git-hooks@2.8.1:
     resolution: {integrity: sha512-DYpcVR1AGtSfFUNzlBdHrQGPsOhuuEJ/FkmPOOlFysP60AHd3nsEpkGq/QEOdtUyT1Qhk7w9oLmFoMG+75BDog==}
-    hasBin: true
-    requiresBuild: true
-    dev: true
-
-  /simple-git-hooks@2.9.0:
-    resolution: {integrity: sha512-waSQ5paUQtyGC0ZxlHmcMmD9I1rRXauikBwX31bX58l5vTOhCEcBC5Bi+ZDkPXTjDnZAF8TbCqKBY+9+sVPScw==}
     hasBin: true
     requiresBuild: true
     dev: true
