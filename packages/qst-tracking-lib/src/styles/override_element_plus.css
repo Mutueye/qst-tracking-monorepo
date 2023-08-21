@@ -1,0 +1,182 @@
+/**
+  element-plus相关样式覆盖，主要是把原组件中一些固定值的样式关联到css变量上，使element-plus组件更符合设计师定制的UI规范
+*/
+
+body {
+  /* 设置el-menu组件背景色/间距 */
+  --el-menu-bg-color: transparent;
+  --el-menu-base-level-padding: var(--el-spacing);
+  --el-menu-level-padding: var(--el-spacing-sm);
+}
+
+/* 使element按钮能够根据component-size的值来变更大小 */
+.el-button {
+  --el-button-size: var(--el-component-size);
+  height: var(--el-button-size);
+  padding: 0 var(--el-spacing-sm);
+}
+.el-button--small {
+  --el-button-size: var(--el-component-size-small);
+  padding: 0 var(--el-spacing-xs);
+}
+.el-button--large {
+  --el-button-size: var(--el-component-size-large);
+  padding: 0 var(--el-spacing);
+}
+
+/* 使圆形按钮在各种尺寸下保持圆形 */
+.el-button.is-circle {
+  width: var(--el-button-size);
+}
+
+/* el-dialog圆角关联到border-radius-base */
+.el-dialog {
+  --el-dialog-border-radius: var(--el-border-radius-base);
+}
+
+/* el-dialog内边距关联到space-md */
+.el-dialog .el-dialog__body {
+  padding: var(--el-spacing-md);
+}
+
+/* 关联弹窗圆角到border-radius-base变量 */
+.el-message-box {
+  /* --el-messagebox-title-color: var(--el-text-color-primary); */
+  /* --el-messagebox-width: 420px; */
+  --el-messagebox-border-radius: var(--el-border-radius-base);
+  /* --el-messagebox-font-size: var(--el-font-size-large); */
+  /* --el-messagebox-content-font-size: var(--el-font-size-base); */
+  /* --el-messagebox-content-color: var(--el-text-color-regular); */
+  /* --el-messagebox-error-font-size: 12px; */
+  /* --el-messagebox-padding-primary: 15px; */
+}
+
+/* input-number靠右的增减按钮适配多种组建尺寸 */
+.el-input-number.is-controls-right .el-input-number__decrease,
+.el-input-number.is-controls-right .el-input-number__increase {
+  --el-input-number-controls-height: calc(0.5 * var(--el-component-size) - 1px);
+}
+.el-input-number.el-input-number--small.is-controls-right .el-input-number__decrease,
+.el-input-number.el-input-number--small.is-controls-right .el-input-number__increase {
+  --el-input-number-controls-height: calc(0.5 * var(--el-component-size-small) - 1px);
+}
+.el-input-number.el-input-number--large.is-controls-right .el-input-number__decrease,
+.el-input-number.el-input-number--large.is-controls-right .el-input-number__increase {
+  --el-input-number-controls-height: calc(0.5 * var(--el-component-size-large) - 1px);
+}
+
+/* 输入框文字大小适配多种组件尺寸 */
+.el-input--small {
+  font-size: var(--el-font-size-small);
+}
+.el-input--large {
+  font-size: var(--el-font-size-medium);
+}
+
+/* el-radio高度适配多种组件尺寸 */
+.el-radio {
+  height: var(--el-component-size);
+}
+.el-radio.el-radio--large {
+  height: var(--el-component-size-large);
+}
+.el-radio.el-radio--small {
+  height: var(--el-component-size-small);
+}
+.el-radio-button__inner {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  height: var(--el-component-size);
+  padding: 0 var(--el-spacing-xs);
+}
+.el-radio-button--large .el-radio-button__inner {
+  height: var(--el-component-size-large);
+  padding: 0 var(--el-spacing-sm);
+}
+.el-radio-button--small .el-radio-button__inner {
+  height: var(--el-component-size-small);
+  padding: 0 var(--el-spacing-xxs);
+}
+
+/* el-checkbox高度适配多种组件尺寸 */
+.el-checkbox {
+  height: var(--el-component-size);
+  --el-checkbox-font-size: var(--el-font-size-base)
+}
+.el-checkbox.el-checkbox--large {
+  height: var(--el-component-size-large);
+}
+.el-checkbox.el-checkbox--small {
+  height: var(--el-component-size-small);
+}
+.el-checkbox-button__inner {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  height: var(--el-component-size);
+  padding: 0 var(--el-spacing-xs);
+}
+.el-checkbox-button--large .el-checkbox-button__inner {
+  height: var(--el-component-size-large);
+  padding: 0 var(--el-spacing-sm);
+}
+.el-checkbox-button--small .el-checkbox-button__inner {
+  height: var(--el-component-size-small);
+  padding: 0 var(--el-spacing-xxs);
+}
+
+/* el-switch适配多种组件尺寸 */
+.el-switch {
+  height: var(--el-component-size);
+}
+.el-switch--large {
+  height: var(--el-component-size-large);
+}
+.el-switch--small {
+  height: var(--el-component-size-small);
+}
+
+/* 表单label适配多种组件尺寸 */
+.el-form-item__label {
+  height: var(--el-component-size);
+  line-height: var(--el-component-size);
+}
+.el-form-item--large .el-form-item__label {
+  height: var(--el-component-size-large);
+  line-height: var(--el-component-size-large);
+}
+.el-form-item--small .el-form-item__label {
+  height: var(--el-component-size-small);
+  line-height: var(--el-component-size-small);
+}
+
+.el-tooltip__trigger:focus-visible {
+  outline: none;
+}
+
+/* el-collapse标题颜色关联到text-color-primary */
+.el-collapse {
+  --el-collapse-header-text-color: var(--el-text-color-secondary);
+}
+
+/* el-divider字体大小 */
+.el-divider__text {
+  font-size: var(--el-font-size-base);
+}
+
+/* 禁用按钮focus后的浅色效果 */
+.el-button:focus {
+  color: var(--el-button-text-color);
+  background-color: var(--el-button-bg-color);
+  border-color: var(--el-button-border-color);
+}
+/* 避免被上面:focus样式覆盖，:active效果在这里要重新声明一下 */
+.el-button:active {
+  color: var(--el-button-active-text-color);
+  background-color: var(--el-button-active-bg-color);
+  border-color: var(--el-button-active-border-color);
+}
+.el-button.is-link:focus {
+  color: var(--el-button-text-color);
+}

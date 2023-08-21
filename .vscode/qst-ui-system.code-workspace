@@ -1,0 +1,58 @@
+{
+  "folders": [
+    {
+      "name": "ROOT",
+      "path": "../"
+    },
+    {
+      "name": "packages/qst-ui-system",
+      "path": "../packages/qst-ui-system"
+    },
+    {
+      "name": "examples/main",
+      "path": "../examples/main"
+    }
+  ],
+  "settings": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "css.validate": false,
+    "scss.validate": false,
+    "less.validate": false,
+    "stylelint.snippet": ["css", "less", "postcss", "scss", "vue"],
+    "stylelint.validate": ["css", "less", "postcss", "scss", "vue"],
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.stylelint": true
+    },
+    "diffEditor.wordWrap": "off",
+    "unocss.root": [
+      "examples/main"
+    ],
+    "colorize.languages": [
+      "json",
+      "css",
+      "sass",
+      "scss",
+      "less",
+      "stylus",
+      "xml",
+      "svg",
+      "javascript",
+      "typescript",
+      "vue"
+    ],
+    "colorize.include": [
+      "**/*.json",
+      "**/*.css",
+      "**/*.scss",
+      "**/*.sass",
+      "**/*.less",
+      "**/*.styl",
+      "**/*.js",
+      "**/*.ts",
+      "**/*.vue"
+    ],
+    "volar.inlayHints.eventArgumentInInlineHandlers": false
+  }
+}

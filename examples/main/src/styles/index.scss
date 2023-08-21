@@ -1,0 +1,13 @@
+// @use './element';
+
+:root {
+  @apply color-text-primary bg-bg h-full;
+  body {
+    @apply h-full w-full min-w-0 text-size-base;
+  }
+
+  // input,
+  // pre {
+  //   @apply font-main;
+  // }
+}
