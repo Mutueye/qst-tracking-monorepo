@@ -1,3 +1,3 @@
-export * from './theme/defaultThemeList';
-export * from './theme/theme';
-export * from './theme/themeForUnocss';
+export const sayHello = (name: string) => {
+  console.log('hello ' + name);
+};

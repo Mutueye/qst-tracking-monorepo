@@ -1,16 +1,12 @@
 <template>
-  <RouterView />
+  <el-config-provider :locale="locale">
+    <RouterView />
+  </el-config-provider>
 </template>
 
 <script setup lang="ts">
-  import { onMounted } from 'vue';
-  import { storeToRefs } from 'pinia';
-  import { useThemeStore } from './store/theme';
+  import { ref } from 'vue';
+  import zhCn from 'element-plus/es/locale/lang/zh-cn';
 
-  const themeStore = useThemeStore();
-  const { currentThemeIndex } = storeToRefs(themeStore);
-
-  onMounted(() => {
-    themeStore.setCurrentThemeIndex(currentThemeIndex.value);
-  });
+  const locale = ref(zhCn);
 </script>

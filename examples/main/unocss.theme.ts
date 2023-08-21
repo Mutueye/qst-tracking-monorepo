@@ -1,44 +1,7 @@
-import { generateUnocssTheme } from '@itshixun/qst-ui-system';
 import { Theme } from 'unocss/preset-mini';
+import { generateUnocssTheme } from '@itshixun/qst-ui-system';
 
-// 使用merge导致vscode假死
-// export const theme: Theme = merge(generateUnocssTheme(), {
-//   breakpoints: {
-//     sm: '640px',
-//     md: '768px',
-//     lg: '1024px',
-//     xl: '1280px',
-//     xxl: '1536px',
-//     W1200: '1200px',
-//     W1250: '1250px',
-//     W1300: '1300px',
-//     W1350: '1350px',
-//     W1400: '1400px',
-//     W1450: '1450px',
-//     W1500: '1500px',
-//     W1550: '1550px',
-//     W1600: '1600px',
-//   },
-// });
-
-export const theme: Theme = Object.assign(generateUnocssTheme(), {
-  breakpoints: {
-    sm: '640px',
-    md: '768px',
-    lg: '1024px',
-    xl: '1280px',
-    xxl: '1536px',
-    W1200: '1200px',
-    W1250: '1250px',
-    W1300: '1300px',
-    W1350: '1350px',
-    W1400: '1400px',
-    W1450: '1450px',
-    W1500: '1500px',
-    W1550: '1550px',
-    W1600: '1600px',
-  },
-});
+export const theme: Theme = generateUnocssTheme();
 
 export const uplusIconCollection = {
   // uplus logo

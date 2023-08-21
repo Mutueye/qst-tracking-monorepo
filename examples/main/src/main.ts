@@ -1,18 +1,25 @@
 import { createApp } from 'vue';
-import ElementPlus from 'element-plus';
-import zhCn from 'element-plus/es/locale/lang/zh-cn';
+import { initQstTheme } from '@itshixun/qst-ui-system';
+
 import App from '@/App.vue';
 import { router } from '@/router/index';
-import pinia from './store';
+import pinia from '@/store';
 
-// element-plus styles
-import 'element-plus/dist/index.css';
+// element-plus css variables
+import 'element-plus/theme-chalk/el-var.css';
 // element-plus darkmode css variables
 import 'element-plus/theme-chalk/dark/css-vars.css';
-// unocss styles
+// fix el-dialog el-message-box el-loading 样式丢失; 或可用uplugin-element-plus插件
+import 'element-plus/theme-chalk/el-dialog.css';
+import 'element-plus/theme-chalk/el-message.css';
+import 'element-plus/theme-chalk/el-message-box.css';
+import 'element-plus/theme-chalk/el-loading.css';
+
 import 'uno.css';
-// project global styles
-import '@/styles/index.scss';
+
+initQstTheme();
 
 const app = createApp(App);
-app.use(ElementPlus, { locale: zhCn }).use(pinia).use(router).mount('#app');
+app.use(pinia);
+app.use(router);
+app.mount('#app');
