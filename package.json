@@ -1,5 +1,5 @@
 {
-  "name": "qst-tracking-lib-monorepo",
+  "name": "qst-tracking-monorepo",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "pnpm -r build",
     "dev": "pnpm build && pnpm -r --workspace-concurrency=0 dev",
     "build:example": "pnpm build && pnpm -r --workspace-concurrency=0 build:example",
-    "pub": "pnpm build && pnpm --filter @itshixun/qst-tracking-lib pub --no-git-checks",
+    "pub": "pnpm build && pnpm --filter @itshixun/qst-tracking-mgr pub --no-git-checks",
     "lint": "pnpm -r --workspace-concurrency=1 lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

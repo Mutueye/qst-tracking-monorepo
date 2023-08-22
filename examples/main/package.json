@@ -1,5 +1,5 @@
 {
-  "name": "qst-tracking-lib-example",
+  "name": "qst-tracking-mgr-example",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@itshixun/qst-ui-system": "^0.1.9",
+    "@itshixun/qst-tracking-mgr": "workspace:^",
     "@vueuse/core": "^10.3.0",
     "@vueuse/head": "^1.3.1",
     "axios": "^1.4.0",

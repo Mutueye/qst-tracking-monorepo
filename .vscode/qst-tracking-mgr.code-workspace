@@ -5,8 +5,8 @@
       "path": "../"
     },
     {
-      "name": "packages/qst-tracking-lib",
-      "path": "../packages/qst-tracking-lib"
+      "name": "packages/qst-tracking-mgr",
+      "path": "../packages/qst-tracking-mgr"
     },
     {
       "name": "examples/main",
@@ -26,31 +26,6 @@
       "source.fixAll.stylelint": true
     },
     "diffEditor.wordWrap": "off",
-    "unocss.root": ["examples/main"],
-    "colorize.languages": [
-      "json",
-      "css",
-      "sass",
-      "scss",
-      "less",
-      "stylus",
-      "xml",
-      "svg",
-      "javascript",
-      "typescript",
-      "vue"
-    ],
-    "colorize.include": [
-      "**/*.json",
-      "**/*.css",
-      "**/*.scss",
-      "**/*.sass",
-      "**/*.less",
-      "**/*.styl",
-      "**/*.js",
-      "**/*.ts",
-      "**/*.vue"
-    ],
-    "volar.inlayHints.eventArgumentInInlineHandlers": false
+    "unocss.root": ["examples/main"]
   }
 }

@@ -5,7 +5,7 @@ const typescript = require('@rollup/plugin-typescript');
 const pkg = require('./package.json');
 
 const banner = `/**
- * qst-tracking-lib v${pkg.version}
+ * qst-tracking-mgr v${pkg.version}
  * Copyright ${new Date().getFullYear()} Mutueye. Licensed under MIT
  */
 `;
@@ -43,10 +43,12 @@ module.exports = outputList.map((outputData) => {
     format: outputData.format,
     banner: outputData.banner,
     sourcemap: outputData.sourcemap,
+    globals: { 'js-base64': 'js-base64' },
   };
   if (outputData.name) output.name = outputData.name;
 
   return {
+    external: ['js-base64'],
     input: resolve('src/index.ts'),
     output,
     plugins: [typescript({ tsconfig: './tsconfig.json' }), outputData.min ? terser() : null],

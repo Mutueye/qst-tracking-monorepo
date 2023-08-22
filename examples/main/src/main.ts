@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { initQstTheme } from '@itshixun/qst-ui-system';
+import { trackingMgr, Source, UserIdType } from '@itshixun/qst-tracking-mgr';
 
 import App from '@/App.vue';
 import { router } from '@/router/index';
@@ -18,6 +19,13 @@ import 'element-plus/theme-chalk/el-loading.css';
 import 'uno.css';
 
 initQstTheme();
+
+trackingMgr.setOption({
+  url: '/assets/gif1px.gif',
+  source: Source.Saas,
+  userIdType: UserIdType.CustomerId,
+  getUserId: () => 'ddd',
+});
 
 const app = createApp(App);
 app.use(pinia);

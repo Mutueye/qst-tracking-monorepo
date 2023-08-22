@@ -25,6 +25,7 @@
 <script lang="ts" setup>
   import { onMounted, ref } from 'vue';
   import { get } from 'lodash-es';
+  import { Platform, trackingMgr, TrackingType } from '@itshixun/qst-tracking-mgr';
   import HelloWorld from '@/components/HelloWorld.vue';
   import ScrollableContent from '@/components/ScrollableContent.vue';
   import { ConfigModel, getSchoolList, SchoolModel, getConfigList } from '../api/dicts';
@@ -41,5 +42,12 @@
     getConfigList().then((res) => {
       configList.value = get(res, 'data.data', []);
     });
+    console.log('option::::', trackingMgr.option);
+    trackingMgr.reportTrackingData([
+      trackingMgr.createTrackingData({
+        type: TrackingType.Page,
+        platform: Platform.Obe,
+      }),
+    ]);
   });
 </script>
