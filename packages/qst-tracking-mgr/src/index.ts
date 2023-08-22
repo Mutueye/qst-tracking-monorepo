@@ -50,6 +50,8 @@ export enum Platform {
   CareerTalk = 'careertalk',
   /** 双选会 */
   JobFair = 'jobfair',
+  /** 数据魔方 */
+  Datacube = 'datacube',
 }
 
 /**

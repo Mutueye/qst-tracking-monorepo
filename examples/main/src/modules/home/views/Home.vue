@@ -42,12 +42,15 @@
     getConfigList().then((res) => {
       configList.value = get(res, 'data.data', []);
     });
-    console.log('option::::', trackingMgr.option);
-    trackingMgr.reportTrackingData([
-      trackingMgr.createTrackingData({
-        type: TrackingType.Page,
-        platform: Platform.Obe,
-      }),
-    ]);
+    // console.log('option::::', trackingMgr.option);
+    const data = trackingMgr.createTrackingData({
+      type: TrackingType.Page,
+      platform: Platform.Obe,
+    });
+    trackingMgr.reportTrackingData(
+      [data],
+      (evt: Event) => console.log('上报成功', evt),
+      (evt: Event) => console.log('上报失败', evt),
+    );
   });
 </script>

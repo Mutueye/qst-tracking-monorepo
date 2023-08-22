@@ -1,8 +1,8 @@
 {
   "name": "@itshixun/qst-tracking-mgr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@8.6.10",
-  "description": "qst tracking lib",
+  "description": "qst tracking manager",
   "author": "mutueye <mutuyueniao@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -18,8 +18,7 @@
   "keywords": [
     "qst",
     "tracking",
-    "lib",
-    "tracking-lib"
+    "manager"
   ],
   "publishConfig": {
     "access": "public"
@@ -33,6 +32,9 @@
     "lint:es": "eslint --ext .js,.ts --ignore-path .eslintignore --fix src",
     "lint:es:check": "eslint --ext .js,.ts --ignore-path .eslintignore src",
     "pub": "pnpm build && npm publish"
+  },
+  "dependencies": {
+    "js-base64": "^3.7.5"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.3",
@@ -53,8 +55,5 @@
   "lint-staged": {
     "./**/*.{vue,js,ts,jsx,tsx,json}": "eslint --ignore-path .eslintignore --fix",
     "./**/*.{vue,js,ts,jsx,tsx,md,json,scss,css,html}": "prettier . --write"
-  },
-  "dependencies": {
-    "js-base64": "^3.7.5"
   }
 }
