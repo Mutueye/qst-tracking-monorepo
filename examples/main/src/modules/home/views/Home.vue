@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col items-center">
       <div class="w-full py-50px text-center font-bold">首页</div>
       <HelloWorld msg="Hellow World" />
-      <el-button>按钮文字</el-button>
+      <el-button @click="reportClick">按钮文字</el-button>
       <div class="p-spacing-sm">
         <el-select v-model="selectedSchool" value-key="id" placeholder="请选择">
           <el-option v-for="item in schoolList" :key="item.id" :label="item.name" :value="item" />
@@ -25,7 +25,7 @@
 <script lang="ts" setup>
   import { onMounted, ref } from 'vue';
   import { get } from 'lodash-es';
-  import { Platform, trackingMgr, TrackingType } from '@itshixun/qst-tracking-mgr';
+  import { Platform, trackingMgr, TrackingType, TrackingData } from '@itshixun/qst-tracking-mgr';
   import HelloWorld from '@/components/HelloWorld.vue';
   import ScrollableContent from '@/components/ScrollableContent.vue';
   import { ConfigModel, getSchoolList, SchoolModel, getConfigList } from '../api/dicts';
@@ -42,15 +42,23 @@
     getConfigList().then((res) => {
       configList.value = get(res, 'data.data', []);
     });
-    // console.log('option::::', trackingMgr.option);
+    console.log('option::::', trackingMgr.option);
     const data = trackingMgr.createTrackingData({
       type: TrackingType.Page,
       platform: Platform.Obe,
     });
     trackingMgr.reportTrackingData(
       [data],
-      (evt: Event) => console.log('上报成功', evt),
-      (evt: Event) => console.log('上报失败', evt),
+      (data: TrackingData[], evt: Event) => console.log('上报成功', data, evt.target),
+      (data: TrackingData[], evt: Event) => console.log('上报失败', data, evt.target),
     );
   });
+
+  const reportClick = () => {
+    trackingMgr.reportOne(
+      { type: TrackingType.Click, platform: Platform.Obe },
+      (data: TrackingData[], evt: Event) => console.log('click上报成功', data, evt.target),
+      (data: TrackingData[], evt: Event) => console.log('click上报失败', data, evt.target),
+    );
+  };
 </script>

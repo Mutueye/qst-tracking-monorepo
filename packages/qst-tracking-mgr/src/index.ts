@@ -1,5 +1,12 @@
-import { Base64 } from 'js-base64';
 import { UUID } from './uuid';
+import {
+  DefaultQueryName,
+  addLocalTrackingData,
+  getLocalTrackingData,
+  getReportUrl,
+  removeLocalTrackingData,
+  splitDataHalf,
+} from './utils';
 
 type PrefixStr<T extends string> = `${T}${string}`;
 
@@ -7,7 +14,8 @@ type PrefixStr<T extends string> = `${T}${string}`;
  * 用户id类型
  * - `nologin`：未登录传'nologin'；
  * - `quc_customer_id:${id}`：默认使用customerId
- * - `member_id:${id}`：如果拿不到customerId, 使用member_id*/
+ * - `member_id:${id}`：如果拿不到customerId, 使用member_id
+ */
 export type UserId = 'nologin' | PrefixStr<'quc_customer_id:' | 'member_id:'>;
 
 /** 埋点类型枚举 */
@@ -89,7 +97,7 @@ export enum UserIdType {
 
 /** 埋点控制器的配置选项 */
 export type TrackingMgrOption = {
-  /** 发送买点信息的url */
+  /** 发送埋点信息的url */
   url: string;
   /** 来源：本地/SAAS */
   source: Source;
@@ -97,6 +105,12 @@ export type TrackingMgrOption = {
   userIdType: UserIdType;
   /** 获取用户id的方法，系统的登录状态可能随时变更，所以此处接收一个获取用户id的方法，已登录返id，未登录，返空字符串 */
   getUserId: () => string;
+  /** 上报url的参数名称，不传则默认为'payload' */
+  queryName?: string;
+  /** 上报失败后重新上报的等待时间(毫秒) ，默认10000毫秒(10秒)*/
+  retryDelay?: number;
+  /** 上报失败后重新上报的次数，默认5次 */
+  retryLimit?: number;
 };
 
 /** 判断是否初始化完成 */
@@ -112,11 +126,8 @@ const trackingMgrInitialized = () => {
 
 /** 设置埋点管理器选项 */
 const setOption = (option: TrackingMgrOption) => {
-  if (!trackingMgr.option) {
-    trackingMgr.option = option;
-  } else {
-    trackingMgr.option = Object.assign({}, trackingMgr.option, option);
-  }
+  trackingMgr.option = Object.assign({}, trackingMgr.option, option);
+  if (!trackingMgr.initialized) trackingMgr.initialized = true;
 };
 
 /** 处理用户id: 如果能取得id,则根据类型增加前缀；id位空返回'nologin' */
@@ -139,7 +150,7 @@ const createTrackingData = (params: TrackingParam): TrackingData => {
   if (!trackingMgrInitialized()) return;
   const time = new Date();
   return {
-    uid: trackingMgr.getResolvedUserId(),
+    uid: getResolvedUserId(),
     url: location.href,
     type: params.type,
     guid: new UUID().toString(),
@@ -151,39 +162,85 @@ const createTrackingData = (params: TrackingParam): TrackingData => {
   };
 };
 
-/** 上报指定的埋点数据 */
-const reportTrackingData = (
-  dataList: TrackingData[],
-  onSuccess?: (evt: Event) => void,
-  onError?: (evt: Event) => void,
+/**
+ * 通过请求img来实现最终的埋点数据上报，同时对上报失败的数据进行重新上报和暂存处理
+ */
+const report = (
+  url: string,
+  data: TrackingData[],
+  onSuccess?: (data: TrackingData[], evt: Event) => void,
+  onError?: (data: TrackingData[], evt: Event) => void,
+  retryTime = 0,
 ) => {
-  if (!trackingMgrInitialized()) return;
   const img = new Image();
-  img.src = `${trackingMgr.option.url}?payload=${Base64.encode(JSON.stringify(dataList))}`;
+  img.src = url;
   img.onload = (evt: Event) => {
-    if (typeof onSuccess === 'function') onSuccess(evt);
-    console.log('report success, evt:', evt);
+    if (typeof onSuccess === 'function') onSuccess(data, evt);
+    // 上报成功后，尝试上报ocalStorage里暂存的上报失败的埋点数据
+    reportStoragedData(onSuccess, onError);
   };
   img.onerror = (evt: Event) => {
-    if (typeof onError === 'function') onError(evt);
-    // TODO 上报失败后重新上报
-    console.log('report error, evt:', evt);
+    if (typeof onError === 'function') onError(data, evt);
+    // 上报失败后尝试重新上报
+    if (window.navigator.onLine && retryTime <= trackingMgr.option.retryLimit) {
+      // 网络没掉线，且没有超过最大重试次数，尝试20s后重新上报
+      setTimeout(() => {
+        report(url, data, onSuccess, onError, retryTime + 1);
+      }, trackingMgr.option.retryDelay);
+    } else {
+      // 网络掉线，或者超过了最大重试次数，直接暂存到localStorage
+      addLocalTrackingData(data);
+    }
   };
+};
+
+/** 上报指定的埋点数据 */
+const reportTrackingData = (
+  data: TrackingData[],
+  onSuccess?: (data: TrackingData[], evt: Event) => void,
+  onError?: (data: TrackingData[], evt: Event) => void,
+) => {
+  if (!trackingMgrInitialized()) return;
+  const url = getReportUrl(trackingMgr.option.url, data, trackingMgr.option.queryName);
+  if (url) {
+    report(url, data, onSuccess, onError);
+  } else {
+    const dataList = splitDataHalf(data);
+    dataList.forEach((item) => {
+      reportTrackingData(item, onSuccess, onError);
+    });
+  }
 };
 
 /** 上报单条埋点数据的快捷方法 */
 const reportOne = (
   data: TrackingParam,
-  onSuccess?: (evt: Event) => void,
-  onError?: (evt: Event) => void,
+  onSuccess?: (data: TrackingData[], evt: Event) => void,
+  onError?: (data: TrackingData[], evt: Event) => void,
 ) => {
-  trackingMgr.reportTrackingData([trackingMgr.createTrackingData(data)], onSuccess, onError);
+  reportTrackingData([createTrackingData(data)], onSuccess, onError);
 };
 
-/** 埋点管理器结 */
+/** 上报localStorage里暂存的上报失败的埋点数据 */
+const reportStoragedData = (
+  onSuccess?: (data: TrackingData[], evt: Event) => void,
+  onError?: (data: TrackingData[], evt: Event) => void,
+) => {
+  const localTrackingData = getLocalTrackingData();
+  if (localTrackingData && localTrackingData.length > 0) {
+    // 检测有没有暂存的上报数据，如果有，尝试上报
+    reportTrackingData(localTrackingData, onSuccess, onError);
+    // 清除暂存的数据，防止重复上报
+    removeLocalTrackingData();
+  }
+};
+
+/** 埋点管理器 */
 export type TrackingMgr = {
   /** 选项，用来配置上报地址，来源，用户id类型，获取用户id的方法等 */
-  option: TrackingMgrOption | null;
+  option: TrackingMgrOption;
+  /** 是否已初始化 */
+  initialized: boolean;
   /** 设置埋点管理器选项 */
   setOption: (option: TrackingMgrOption) => void;
   /** 处理用户id: 如果能取得id,则根据类型增加前缀；id位空返回'nologin' */
@@ -192,24 +249,38 @@ export type TrackingMgr = {
   createTrackingData: (params: TrackingParam) => TrackingData;
   /** 上报埋点数据 */
   reportTrackingData: (
-    dataList: TrackingData[],
-    onSuccess?: (evt: Event) => void,
-    onError?: (evt: Event) => void,
+    data: TrackingData[],
+    onSuccess?: (data: TrackingData[], evt: Event) => void,
+    onError?: (data: TrackingData[], evt: Event) => void,
   ) => void;
   /** 上报单条埋点数据的快捷方法 */
   reportOne: (
     data: TrackingParam,
-    onSuccess?: (evt: Event) => void,
-    onError?: (evt: Event) => void,
+    onSuccess?: (data: TrackingData[], evt: Event) => void,
+    onError?: (data: TrackingData[], evt: Event) => void,
+  ) => void;
+  reportStoragedData: (
+    onSuccess?: (data: TrackingData[], evt: Event) => void,
+    onError?: (data: TrackingData[], evt: Event) => void,
   ) => void;
 };
 
 /** 埋点管理器 */
 export const trackingMgr: TrackingMgr = {
-  option: null,
+  option: {
+    url: '',
+    source: Source.Saas,
+    userIdType: UserIdType.CustomerId,
+    getUserId: () => '',
+    queryName: DefaultQueryName,
+    retryDelay: 10000,
+    retryLimit: 5,
+  },
+  initialized: false,
   setOption,
   getResolvedUserId,
   createTrackingData,
   reportTrackingData,
   reportOne,
+  reportStoragedData,
 };

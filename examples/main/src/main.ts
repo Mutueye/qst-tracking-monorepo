@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { initQstTheme } from '@itshixun/qst-ui-system';
-import { trackingMgr, Source, UserIdType } from '@itshixun/qst-tracking-mgr';
+import { trackingMgr, Source, UserIdType, TrackingData } from '@itshixun/qst-tracking-mgr';
 
 import App from '@/App.vue';
 import { router } from '@/router/index';
@@ -20,12 +20,24 @@ import 'uno.css';
 
 initQstTheme();
 
+// 初始化埋点管理器
 trackingMgr.setOption({
   url: '/assets/gif1px.gif',
   source: Source.Saas,
   userIdType: UserIdType.CustomerId,
-  getUserId: () => 'ddd',
+  getUserId: () => 'user_id_test',
+  queryName: 'data',
 });
+
+// 上报localStorage中可能存储的上报失败的埋点数据
+trackingMgr.reportStoragedData(
+  (data: TrackingData[], evt: Event) => {
+    console.log('上报暂存数据成功:', data, evt);
+  },
+  (data: TrackingData[], evt: Event) => {
+    console.log('上报暂存数据失败:', data, evt);
+  },
+);
 
 const app = createApp(App);
 app.use(pinia);
